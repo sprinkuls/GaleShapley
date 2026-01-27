@@ -47,7 +47,7 @@ void galeShapley() {
         } else {
             int currentH = sMatch[s];
             // trade up
-            if (sRanks[s][h] < sRanks[s][currentH]) {
+            if (studentRanks[s][h] < studentRanks[s][currentH]) {
                 sMatch[s] = h;
                 hMatch[h] = s;
                 hMatch[currentH] = 0;
@@ -57,6 +57,8 @@ void galeShapley() {
             }
         }
     }
+    cout << endl;
+
 
     for (int i = 1; i <= n; ++i) {
         cout << i << " " << hMatch[i] << endl;
