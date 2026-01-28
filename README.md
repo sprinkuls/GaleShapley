@@ -1,5 +1,10 @@
+# Gale-Shapley
+
 Name: Kaitlyn Tran
 UFID: 79518935
+
+Name: May Macler
+UFID: 26170596
 
 GaleShapley.cpp: The source code for the Gale-Shapley matching engine (Task A)
 
@@ -11,6 +16,13 @@ To compile the matcher, use a C++ compiler (like g++):
 Then run:
     ./test
 Copy paste input from example.in, and then click enter. The program should print out the matched output.
+
+You can also generate a random input of size 'n' by passing an integer as an argument.
+For example, to generate output for 5 hospitals/students, run:
+```
+./test 5
+```
+and you'll see output for the generated data.
 
 Assumptions & Constraints
     The input must start with an integer n, followed by n lines of hospital preferences and n lines of student preferences.
