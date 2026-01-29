@@ -70,10 +70,12 @@ void galeShapleyStdin() {
 // runs G-S on the lists of input given, and returns a vector of pairs
 // (literally, the (Hospital, Student) pairs that G-S outputs)
 vector<pair<int, int>> galeShapleyVector(int n, const vector<vector<int>> &hospitalPrefs,
-                                         const vector<vector<int>> &studentRanks) {
+                                         const vector<vector<int>> &studentRanks,
+                                        bool outputText) {
     vector<int> sMatch(n + 1, 0);
     vector<int> hMatch(n + 1, 0);
     vector<int> nextChoice(n + 1, 1);
+    
 
     queue<int> freeHospitals;
     for (int i = 1; i <= n; ++i)
@@ -105,17 +107,18 @@ vector<pair<int, int>> galeShapleyVector(int n, const vector<vector<int>> &hospi
 
     vector<pair<int, int>> pairings(n + 1);
 
-    cout << "Matchings:\n";
-
-    for (int i = 1; i <= n; ++i) {
-        cout << i << " " << hMatch[i] << "\n";
+    if (outputText){
+        cout << "Matchings:\n";
+        for (int i = 1; i <= n; ++i) {
+            cout << i << " " << hMatch[i] << "\n";
+        }
     }
 
     return pairings;
 }
 
 // generate input for G-S, namely a list of hospital/student preferences
-pair<vector<vector<int>>, vector<vector<int>>> generateInput(int n) {
+pair<vector<vector<int>>, vector<vector<int>>> generateInput(int n, bool outputText) {
     // store the numbers 1-n (inclusive) in a vector, so for n=3 it'll store {1, 2, 3}, n=5 it'll store {1, 2, 3, 4, 5}.
     // since every preference list, for both hospitals and students, is just /some/ permutation of this list, we just
     // keep shuffling this list and saying the result of that shuffle is the preference list for the
@@ -129,7 +132,9 @@ pair<vector<vector<int>>, vector<vector<int>>> generateInput(int n) {
     random_device rd;
     mt19937 g(rd());
 
-    cout << "Hospital Rankings:\n";
+    if (outputText) {
+        cout << "Hospital Rankings:\n";
+    }
     vector<vector<int>> hospitalRankings(n + 1, vector<int>(n + 1));
 
     for (int i = 1; i <= n; i++) {
@@ -138,15 +143,18 @@ pair<vector<vector<int>>, vector<vector<int>>> generateInput(int n) {
         for (int j = 1; j <= n; j++) {
             hospitalRankings[i][j] = all_nums[j - 1];
         }
-
-        cout << "H" << i << " | ";
-        for (auto num : all_nums) {
-            cout << num << " ";
+        if (outputText) {
+            cout << "H" << i << " | ";
+            for (auto num : all_nums) {
+                cout << num << " ";
+            }
+            cout << "\n";
         }
-        cout << "\n";
     }
 
+    if (outputText) {
     cout << "Student Rankings:\n";
+    }
     vector<vector<int>> studentRankings(n + 1, vector<int>(n + 1));
 
     for (int i = 1; i <= n; i++) {
@@ -161,27 +169,66 @@ pair<vector<vector<int>>, vector<vector<int>>> generateInput(int n) {
             // studentRankings[i][j] = all_nums[j - 1];
             studentRankings[i][all_nums[j - 1]] = j;
         }
+        
 
-        cout << "S" << i << " | ";
-        for (auto num : all_nums) {
-            cout << num << " ";
-        }
+        if (outputText) {
+            cout << "S" << i << " | ";
+            for (auto num : all_nums) {
+                cout << num << " ";
+            }
         cout << "\n";
+        }
     }
 
     return {hospitalRankings, studentRankings};
 }
 
+void runScalabilityTests() {
+    vector<int> sizes = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+    // this runs each size 10 times to average the results
+    const int trials = 10; 
+
+    cout << "-------------------------------------------------" << endl;
+    cout << "n" << "\t" << "Average Time in microseconds (10 trials)" << endl;
+    cout << "-------------------------------------------------" << endl;
+
+    for (int n : sizes) {
+        long long totalDuration = 0;
+
+        for (int t = 0; t < trials; t++) {
+            auto data = generateInput(n, false); 
+            auto start = chrono::high_resolution_clock::now();
+
+            // galeShapleyVector has couts disabled so that printing time doesn't affect timing results
+            galeShapleyVector(n, data.first, data.second, false);
+
+            auto stop = chrono::high_resolution_clock::now();
+            
+            auto duration = chrono::duration_cast<chrono::microseconds>(stop - start);
+            totalDuration += duration.count();
+        }
+
+        cout << n << "\t" << (totalDuration / trials) << endl;
+    }
+}
+
 int main(int argc, char *argv[]) {
 
     if (argc == 2) {
-        // if passed a number (well, hopefully a number, we don't check), generate data with that many
-        // hospitals/students, and run G-S on it
-        int n = stoi(argv[1]);
-
-        vector<vector<int>> hospitalPrefs, studentRanks;
-        tie(hospitalPrefs, studentRanks) = generateInput(n);
-        vector<pair<int, int>> pairings = galeShapleyVector(n, hospitalPrefs, studentRanks);
+        
+        string arg = argv[1];
+        if (arg == "--test") {
+            // run timed tests for scalability, outputting average time taken for various input sizes
+            runScalabilityTests();
+        } else {
+            // if passed a number (well, hopefully a number, we don't check), generate data with that many
+            // hospitals/students, and run G-S on it
+            int n = stoi(argv[1]);
+            vector<vector<int>> hospitalPrefs, studentRanks;
+            tie(hospitalPrefs, studentRanks) = generateInput(n, true);
+            vector<pair<int, int>> pairings = galeShapleyVector(n, hospitalPrefs, studentRanks, true);
+        }
+        
 
     } else {
         galeShapleyStdin();

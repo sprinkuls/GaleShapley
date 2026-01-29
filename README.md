@@ -24,6 +24,10 @@ For example, to generate output for 5 hospitals/students, run:
 ```
 and you'll see output for the generated data.
 
+To test scalability/runtime, run:
+    ./test --test
+This will return the average time taken for the algorithm to execute for increasing numbers of hospitals/students.
+
 Assumptions & Constraints
     The input must start with an integer n, followed by n lines of hospital preferences and n lines of student preferences.
     Requires a C++11 compatible compiler. No external libraries are needed.
