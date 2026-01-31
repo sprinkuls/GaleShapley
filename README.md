@@ -7,8 +7,8 @@ Name: May Macler
 UFID: 26170596  
 
 ## Files
-`GaleShapley.cpp`: The source code for the Gale-Shapley matching engine (Task A), the verifier (Task B), and the scalability testing suite (Task C).  
-`AlgosRuntime.xlsx`:  The graphed data for the runtimes of the matcher and verifier.  
+`src/GaleShapley.cpp`: The source code for the Gale-Shapley matching engine (Task A), the verifier (Task B), and the scalability testing suite (Task C).  
+`runtimeData/AlgosRuntime.xlsx`:  The graphed data for the runtimes of the matcher and verifier.  
 `exampleFiles/example.in`: A sample input file following the assignment specification.  
 `exampleFiles/example.out`: The output expected from the matching engine corresponding with example.in.  
 
