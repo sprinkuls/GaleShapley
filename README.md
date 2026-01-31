@@ -17,7 +17,7 @@ There are other example inputs in the `exampleFiles/` directory as well, named a
 ## Match Generation
 To compile the matcher, use a C++ compiler (like g++):  
 ```
-g++ -std=c++11 -o test GaleShapley.cpp
+g++ -std=c++11 -o test ./src/GaleShapley.cpp
 ```
 
 To run the matcher and manually provide input:  
