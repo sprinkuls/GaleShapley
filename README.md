@@ -70,7 +70,7 @@ To test scalability/runtime, run:
 This will return the average time taken for the algorithm to execute for increasing numbers of hospitals/students, and for the verifier to verify the matches.
 Graphs are stored in `AlgosRuntime.xlsx`. This contains the data and the corresponding graphs for one run of `./test --test`  
 
-![Graphs of Running Time](runtimes.png)
+![Graphs of Running Time](runtimeData/runtimes.png)
 
 Both the matching engine and the verifier show a trend of O(n^2). As n increases, the time taken grows at a rate of n^2, which is expected for the G-S algorithm.
 
